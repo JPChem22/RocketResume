@@ -74,6 +74,7 @@ export default function HomePage() {
                 width={1200}
                 height={600}
                 className="rounded-lg shadow-2xl mx-auto"
+                data-ai-hint="resume dashboard interface"
               />
             </div>
           </div>
@@ -140,11 +141,6 @@ export default function HomePage() {
                 <p className="text-muted-foreground mb-6">
                   For one tailored resume and its accompanying cover letter.
                 </p>
-                <Button size="lg" asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                  <Link href="/app">
-                    Get Started for $1.50 <ChevronRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
               </CardContent>
             </Card>
           </div>
