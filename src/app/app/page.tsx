@@ -17,7 +17,7 @@ import { generateCoverLetter, GenerateCoverLetterInput } from '@/ai/flows/genera
 import { useToast } from "@/hooks/use-toast";
 
 export default function AppPage() {
-  const [resumeText, setResumeText] = useState<string>('');
+  const [resumeDataUri, setResumeDataUri] = useState<string>('');
   const [jobDescription, setJobDescription] = useState<string>('');
   const [tailoredResume, setTailoredResume] = useState<string>('');
   const [coverLetter, setCoverLetter] = useState<string>('');
@@ -30,18 +30,21 @@ export default function AppPage() {
   const handleResumeFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+      if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
         setResumeFileName(file.name);
-        const text = await file.text();
-        setResumeText(text);
-        setError(null); 
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setResumeDataUri(reader.result as string);
+          setError(null); 
+        };
+        reader.readAsDataURL(file);
       } else {
-        setError('Please upload a .txt file for your resume. PDF/DOCX upload coming soon!');
+        setError('Please upload a .pdf file for your resume.');
         setResumeFileName(null);
-        setResumeText('');
+        setResumeDataUri('');
         toast({
           title: "Invalid File Type",
-          description: "Please upload a .txt file. PDF/DOCX support is planned for a future update.",
+          description: "Please upload a .pdf file.",
           variant: "destructive",
         });
       }
@@ -50,8 +53,8 @@ export default function AppPage() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!resumeText || !jobDescription) {
-      setError('Please provide both your resume content and the job description.');
+    if (!resumeDataUri || !jobDescription) {
+      setError('Please provide both your resume file and the job description.');
       toast({
         title: "Missing Information",
         description: "Both resume and job description are required.",
@@ -70,7 +73,7 @@ export default function AppPage() {
         title: "Processing Request...",
         description: "Our AI is tailoring your resume. This may take a moment.",
       });
-      const tailorInput: TailorResumeInput = { resumeText, jobDescription };
+      const tailorInput: TailorResumeInput = { resumeDataUri, jobDescription };
       const tailoredOutput = await tailorResume(tailorInput);
       setTailoredResume(tailoredOutput.tailoredResume);
 
@@ -120,7 +123,6 @@ export default function AppPage() {
     toast({ title: "Download Started", description: `${filename} is downloading.` });
   };
   
-  // Client-side Date for "Generated on" to avoid hydration mismatch
   const [currentDate, setCurrentDate] = useState<string | null>(null);
   useEffect(() => {
     setCurrentDate(new Date().toLocaleDateString());
@@ -145,27 +147,17 @@ export default function AppPage() {
                 <div className="space-y-4">
                   <Label htmlFor="resumeUpload" className="text-lg font-semibold flex items-center gap-2">
                     <UploadCloud className="h-5 w-5 text-primary" />
-                    Upload Your Resume (.txt file)
+                    Upload Your Resume (.pdf file)
                   </Label>
                   <Input
                     id="resumeUpload"
                     type="file"
-                    accept=".txt"
+                    accept=".pdf"
                     onChange={handleResumeFileChange}
                     className="items-center justify-center file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 py-4"
                     required
                   />
                   {resumeFileName && <p className="text-sm text-muted-foreground">Uploaded: {resumeFileName}</p>}
-                  {resumeText && (
-                     <Textarea
-                        placeholder="Your resume content will appear here after upload (or paste here)..."
-                        value={resumeText}
-                        onChange={(e) => setResumeText(e.target.value)}
-                        rows={10}
-                        className="mt-2 border-dashed"
-                        aria-label="Resume Content"
-                      />
-                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="jobDescription" className="text-lg font-semibold flex items-center gap-2">
@@ -177,7 +169,7 @@ export default function AppPage() {
                     placeholder="Paste the full job description here..."
                     value={jobDescription}
                     onChange={(e) => setJobDescription(e.target.value)}
-                    rows={resumeText ? 10 : 17} // Adjust height based on resume text area
+                    rows={resumeDataUri ? 10 : 17} 
                     required
                     className="shadow-sm"
                     aria-label="Job Description"
