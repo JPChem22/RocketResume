@@ -68,13 +68,12 @@ export default function HomePage() {
               </Link>
             </Button>
              <div className="mt-12">
-              <Image 
-                src="https://placehold.co/1200x600.png"
+              <Image
+                src="https://images.unsplash.com/photo-1573164574572-cb89e39749b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtZWV0aW5nfGVufDB8fHx8MTc0ODI5NDIzN3ww&ixlib=rb-4.1.0&q=80&w=1080"
                 alt="ResumeRocket dashboard preview"
                 width={1200}
                 height={600}
                 className="rounded-lg shadow-2xl mx-auto"
-                data-ai-hint="resume dashboard interface"
               />
             </div>
           </div>
