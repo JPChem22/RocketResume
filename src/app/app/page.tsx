@@ -152,7 +152,7 @@ export default function AppPage() {
                     type="file"
                     accept=".txt"
                     onChange={handleResumeFileChange}
-                    className="items-center justify-center file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 py-4"
+                    className="items-center justify-center file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 py-4"
                     required
                   />
                   {resumeFileName && <p className="text-sm text-muted-foreground">Uploaded: {resumeFileName}</p>}
