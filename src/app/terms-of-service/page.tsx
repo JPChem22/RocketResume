@@ -14,7 +14,7 @@ export default function TermsOfServicePage() {
           <CardContent className="space-y-4 text-muted-foreground">
             <p><strong>Last Updated: {new Date().toLocaleDateString()}</strong></p>
 
-            <p>Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the ResumeRocket website (the "Service") operated by ResumeRocket ("us", "we", or "our").</p>
+            <p>Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the ResumeRocket website (the "Service") operated by ResumeRocket and AIdvisor, LLC ("us", "we", or "our").</p>
             <p>Your access to and use of the Service is conditioned upon your acceptance of and compliance with these Terms. These Terms apply to all visitors, users, and others who wish to access or use the Service.</p>
             <p>By accessing or using the Service, you agree to be bound by these Terms. If you disagree with any part of the terms, then you do not have permission to access the Service.</p>
 
@@ -44,14 +44,14 @@ export default function TermsOfServicePage() {
             <p>In no event shall ResumeRocket, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Service; (ii) any conduct or content of any third party on the Service; (iii) any content obtained from the Service; and (iv) unauthorized access, use or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence) or any other legal theory, whether or not we have been informed of the possibility of such damage, and even if a remedy set forth herein is found to have failed of its essential purpose.</p>
 
             <h2 className="text-xl font-semibold text-foreground pt-4">7. Governing Law</h2>
-            <p>These Terms shall be governed and construed in accordance with the laws of [Your Jurisdiction - e.g., State of California, United States], without regard to its conflict of law provisions.</p>
+            <p>These Terms shall be governed and construed in accordance with the laws of the State of Delaware, United States, and in accordance with all laws of the United States of America, without regard to its conflict of law provisions.</p>
 
             <h2 className="text-xl font-semibold text-foreground pt-4">8. Changes to Terms</h2>
             <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</p>
             <p>By continuing to access or use our Service after any revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, you are no longer authorized to use the Service.</p>
 
             <h2 className="text-xl font-semibold text-foreground pt-4">9. Contact Us</h2>
-            <p>If you have any questions about these Terms, please contact us at: [Your Contact Email Address or Link to Contact Form - e.g., support@resumerocket.com]</p>
+            <p>If you have any questions about these Terms, please contact us at: jmpatterson@aidvisorllc.com</p>
           </CardContent>
         </Card>
       </main>

@@ -137,7 +137,7 @@ export default function HomePage() {
                 <CardTitle className="text-2xl text-primary">Per Generation</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-5xl font-bold text-foreground mb-4">$1.50</p>
+                <p className="text-5xl font-bold text-foreground mb-4">$2.00</p>
                 <p className="text-muted-foreground mb-6">
                   For one tailored resume and its accompanying cover letter.
                 </p>

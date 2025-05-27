@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
           <CardContent className="space-y-4 text-muted-foreground">
             <p><strong>Last Updated: {new Date().toLocaleDateString()}</strong></p>
             
-            <p>Welcome to ResumeRocket! We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and services.</p>
+            <p>Welcome to ResumeRocket, a subsidary of AIdvisor, LLC! We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and services.</p>
 
             <h2 className="text-xl font-semibold text-foreground pt-4">1. Information We Collect</h2>
             <p>We may collect personal information that you voluntarily provide to us when you use our services, such as:</p>
@@ -56,7 +56,7 @@ export default function PrivacyPolicyPage() {
             <p>We may update this Privacy Policy from time to time. The updated version will be indicated by an updated "Last Updated" date. We encourage you to review this Privacy Policy frequently to be informed of how we are protecting your information.</p>
 
             <h2 className="text-xl font-semibold text-foreground pt-4">7. Contact Us</h2>
-            <p>If you have questions or comments about this Privacy Policy, please contact us at: [Your Contact Email Address or Link to Contact Form - e.g., support@resumerocket.com]</p>
+            <p>If you have questions or comments about this Privacy Policy, please contact us at: jmpatterson@aidvisorllc.com</p>
           </CardContent>
         </Card>
       </main>

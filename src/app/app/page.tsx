@@ -1,20 +1,20 @@
-
-'use client';
+ 'use client';
 
 import { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Rocket, FileText, Download, AlertCircle, Loader2, UploadCloud } from 'lucide-react';
+import { Rocket, FileText, Download, AlertCircle, Loader2 } from 'lucide-react';
 import { tailorResume, TailorResumeInput } from '@/ai/flows/tailor-resume';
 import { generateCoverLetter, GenerateCoverLetterInput } from '@/ai/flows/generate-cover-letter';
 import { useToast } from "@/hooks/use-toast";
+import { Input } from '@/components/ui/input';
+
 
 export default function AppPage() {
   const [resumeDataUri, setResumeDataUri] = useState<string>('');
@@ -27,27 +27,52 @@ export default function AppPage() {
 
   const { toast } = useToast();
 
+  const [fileName, setFileName] = useState('');
+
   const handleResumeFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
-        setResumeFileName(file.name);
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setResumeDataUri(reader.result as string);
-          setError(null); 
-        };
-        reader.readAsDataURL(file);
-      } else {
-        setError('Please upload a .pdf file for your resume.');
+      const acceptedTypes = [
+        'application/pdf', // .pdf
+      ];
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+      const isAcceptedType = acceptedTypes.includes(file.type) || (fileExtension === 'pdf');
+
+      if (!isAcceptedType) {
+        setError('Invalid file type. Please upload a .pdf file.');
         setResumeFileName(null);
         setResumeDataUri('');
+        setFileName('');
         toast({
           title: "Invalid File Type",
           description: "Please upload a .pdf file.",
           variant: "destructive",
         });
+        return;
       }
+
+      const maxSizeInBytes = 2 * 1024 * 1024; // 2MB
+      if (file.size > maxSizeInBytes) {
+        setError(`File is too large. Maximum size is ${maxSizeInBytes / (1024 * 1024)}MB.`);
+        setResumeFileName(null);
+        setResumeDataUri('');
+        setFileName('');
+        toast({
+          title: "File Too Large",
+          description: `Maximum size is ${maxSizeInBytes / (1024 * 1024)}MB.`, 
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setResumeFileName(file.name);
+      setFileName(file.name);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setResumeDataUri(e.target?.result as string);
+        setError(null);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -57,7 +82,7 @@ export default function AppPage() {
       setError('Please provide both your resume file and the job description.');
       toast({
         title: "Missing Information",
-        description: "Both resume and job description are required.",
+        description: "Both resume (PDF) and job description are required.",
         variant: "destructive",
       });
       return;
@@ -87,7 +112,7 @@ export default function AppPage() {
       };
       const coverLetterOutput = await generateCoverLetter(coverLetterInput);
       setCoverLetter(coverLetterOutput.coverLetter);
-      
+
       toast({
         title: "Success!",
         description: "Your tailored resume and cover letter are ready.",
@@ -138,26 +163,42 @@ export default function AppPage() {
             <Rocket className="h-12 w-12 text-primary mx-auto mb-2" />
             <CardTitle className="text-3xl font-bold">Resume & Cover Letter Generator</CardTitle>
             <CardDescription>
-              Upload your resume, paste the job description, and let our AI craft tailored documents for you. Cost: $1.50 per generation.
+              Upload your resume (PDF), paste the job description, and let our AI craft tailored documents for you. Cost: $2.00 per generation.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <Label htmlFor="resumeUpload" className="text-lg font-semibold flex items-center gap-2">
-                    <UploadCloud className="h-5 w-5 text-primary" />
-                    Upload Your Resume (.pdf file)
+                  <Label htmlFor="resumeFile" className="text-lg font-semibold flex items-center gap-2">
+                    <Rocket className="h-5 w-5 text-primary" />
+                    Upload Your Resume (.pdf)
                   </Label>
-                  <Input
-                    id="resumeUpload"
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleResumeFileChange}
-                    className="items-center justify-center file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 py-4"
-                    required
-                  />
-                  {resumeFileName && <p className="text-sm text-muted-foreground">Uploaded: {resumeFileName}</p>}
+                  <div className="flex items-center justify-center w-full">
+                    <Input
+                      id="resumeFile"
+                      type="file"
+                      accept=".pdf"
+                      onChange={handleResumeFileChange}
+                      className="py-4 flex items-center justify-center file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 cursor-pointer"
+                      required
+                      aria-label="Upload your resume PDF"
+                    />
+                  </div>
+
+                  {fileName && (
+                    <div className="text-center mt-2 p-3 rounded-lg bg-muted/50">
+                      <p className="text-sm text-muted-foreground">Selected file:</p>
+                      <p className="text-md font-medium text-primary">{fileName}</p>
+                    </div>
+                  )}
+                  {error && (
+                    <Alert variant="destructive" className="shadow-md">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Error</AlertTitle>
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="jobDescription" className="text-lg font-semibold flex items-center gap-2">
@@ -169,21 +210,13 @@ export default function AppPage() {
                     placeholder="Paste the full job description here..."
                     value={jobDescription}
                     onChange={(e) => setJobDescription(e.target.value)}
-                    rows={resumeDataUri ? 10 : 17} 
+                    rows={resumeDataUri ? 10 : 17}
                     required
                     className="shadow-sm"
                     aria-label="Job Description"
                   />
                 </div>
               </div>
-
-              {error && (
-                <Alert variant="destructive" className="shadow-md">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
 
               <Button
                 type="submit"
@@ -198,7 +231,7 @@ export default function AppPage() {
                 ) : (
                   <>
                     <Rocket className="mr-2 h-5 w-5" />
-                    Generate Documents ($1.50)
+                    Generate Documents ($2.00)
                   </>
                 )}
               </Button>
